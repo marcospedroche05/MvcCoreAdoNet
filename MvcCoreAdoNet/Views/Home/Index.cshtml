@@ -1,0 +1,14 @@
+﻿<h1 style="color:darkviolet">
+    INDEX
+</h1>
+<button id="botonVista" class="btn btn-info">Cambiar mensaje layout</button>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            $("#botonVista").click(function() {
+                $("#mensajeVista").text("Mensaje cambiado")
+            })
+        })
+    </script>
+}
