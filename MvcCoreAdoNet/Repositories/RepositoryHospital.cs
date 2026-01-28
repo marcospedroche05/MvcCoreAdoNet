@@ -11,7 +11,7 @@ namespace MvcCoreAdoNet.Repositories
 
         public RepositoryHospital()
         {
-            string connectionString = @"Data Source=LOCALHOST\DEVELOPER;Initial Catalog=HOSPITAL;Persist Security Info=True;User ID=SA;Encrypt=True;Trust Server Certificate=True";
+            string connectionString = @"Data Source=LOCALHOST\DEVELOPER;Initial Catalog=HOSPITAL;User ID=SA;Password=Admin123;Trust Server Certificate=True";
             this.cn = new SqlConnection(connectionString);
             this.com = new SqlCommand();
             this.com.Connection = this.cn;
@@ -40,6 +40,28 @@ namespace MvcCoreAdoNet.Repositories
             await this.reader.CloseAsync();
             await this.cn.CloseAsync();
             return hospitales;
+        }
+
+        public async Task<Hospital> FindHospitalAsync(int idHospital)
+        {
+            string sql = "SELECT * FROM HOSPITAL WHERE HOSPITAL_COD=@hospitalcod";
+            this.com.Parameters.AddWithValue("@hospitalcod", idHospital);
+            this.com.CommandType = System.Data.CommandType.Text;
+            this.com.CommandText = sql;
+
+            await this.cn.OpenAsync();
+            this.reader = await this.com.ExecuteReaderAsync();
+            Hospital hospital = new Hospital();
+            await this.reader.ReadAsync();
+            hospital.IdHospital = int.Parse(this.reader["HOSPITAL_COD"].ToString());
+            hospital.Nombre = this.reader["NOMBRE"].ToString();
+            hospital.Direccion = this.reader["DIRECCION"].ToString();
+            hospital.Telefono = this.reader["TELEFONO"].ToString();
+            hospital.Camas = int.Parse(this.reader["NUM_CAMA"].ToString());
+            await this.reader.CloseAsync();
+            await this.cn.CloseAsync();
+            this.com.Parameters.Clear();
+            return hospital;
         }
     }
 }
