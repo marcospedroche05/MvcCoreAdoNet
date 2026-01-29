@@ -1,10 +1,18 @@
 ﻿@model List<Doctor>
+@{
+    List<string> especialidades = (List<string>)ViewData["ESPECIALIDADES"];
+}
 
 <h1>DOCTORES</h1>
 
 <form method="post">
     <label>Introduzca especialidad: </label>
-    <input type="text" class="form-control" name="especialidad" />
+    <select name="especialidad" class="form-control">
+        @foreach (string espe in especialidades)
+            {
+                <option>@espe</option>
+            }
+        </select>
     <button class="btn btn-primary">Cargar doctores</button>
 </form>
 

@@ -12,7 +12,7 @@ namespace MvcCoreAdoNet.Repositories
 
         public RepositoryHospital()
         {
-            string connectionString = @"Data Source=LOCALHOST\DEVELOPER;Initial Catalog=HOSPITAL;User ID=SA;Password=Admin123;Trust Server Certificate=True";
+            string connectionString = @"Data Source=LOCALHOST\DEVELOPER;Initial Catalog=HOSPITAL;Persist Security Info=True;User ID=SA;Encrypt=True;Trust Server Certificate=True";
             this.cn = new SqlConnection(connectionString);
             this.com = new SqlCommand();
             this.com.Connection = this.cn;
@@ -163,6 +163,24 @@ namespace MvcCoreAdoNet.Repositories
             await this.reader.CloseAsync();
             await this.cn.CloseAsync();
             return doctores;
+        }
+
+        public async Task<List<string>> GetEspecialidadesAsync()
+        {
+            string sql = "SELECT DISTINCT ESPECIALIDAD FROM DOCTOR";
+            this.com.CommandType = CommandType.Text;
+            this.com.CommandText = sql;
+            await this.cn.OpenAsync();
+            this.reader = await this.com.ExecuteReaderAsync();
+            List<string> especialidades = new List<string>();
+            while(await this.reader.ReadAsync())
+            {
+                string espe = this.reader["ESPECIALIDAD"].ToString();
+                especialidades.Add(espe);
+            }
+            await this.reader.CloseAsync();
+            await this.cn.CloseAsync();
+            return especialidades;
         }
 
 
